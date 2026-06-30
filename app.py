@@ -52,7 +52,7 @@ min_window = config.MIN_LAG_HOURS + 1
 
 st.title("🌱 AgroSense — Historical Forecast Dashboard")
 
-# --------------------------------------------------------------- sidebar --
+#  sidebar 
 st.sidebar.title("⚙️ Playback Controls")
 st.sidebar.caption(
     "This dashboard replays PAST sensor data to simulate a live feed. "
@@ -83,7 +83,7 @@ if st.sidebar.button("⏮️ Reset to start"):
     st.session_state.playhead = min_window
 
 
-# ------------------------------------------------------- live sensor panel --
+#  live sensor panel 
 @st.fragment(run_every=speed if st.session_state.live else None)
 def live_sensor_panel():
     if st.session_state.live:
@@ -116,7 +116,7 @@ def live_sensor_panel():
     status_color = {"DRY": "🔴", "OPTIMAL": "🟢", "WET": "🔵"}[current_status]
     st.subheader(f"Soil status: {status_color} {current_status}")
 
-    # ------------------------------------------------------------ chart --
+    #  chart 
     st.divider()
     st.header("📊 Sensor Trends")
 
@@ -158,7 +158,7 @@ def live_sensor_panel():
 
 live_sensor_panel()
 
-# --------------------------------------------------------------- forecast --
+#  forecast 
 @st.fragment(run_every=speed if st.session_state.live else None)
 def forecast_panel():
     st.divider()
@@ -203,7 +203,7 @@ def forecast_panel():
 
     fig_fc = go.Figure()
     fig_fc.add_trace(go.Scatter(
-        x=playhead_hourly.tail(24).index, y=playhead_hourly.tail(24)[config.SOIL_COL],
+        x=playhead_hourly).index, y=playhead_hourly[config.SOIL_COL],
         name="Soil Moisture (recent history)", mode="lines+markers",
         line=dict(color="seagreen"),
     ))
