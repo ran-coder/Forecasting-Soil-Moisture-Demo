@@ -206,7 +206,7 @@ def forecast_panel():
         x=playhead_hourly).index, y=playhead_hourly[config.SOIL_COL],
         name="Soil Moisture (recent history)", mode="lines+markers",
         line=dict(color="seagreen"),
-    ))
+    )
     fig_fc.add_trace(go.Scatter(
         x=fc.index, y=fc["forecast_soil_value"],
         name="Soil Moisture (forecast)", mode="lines+markers",
