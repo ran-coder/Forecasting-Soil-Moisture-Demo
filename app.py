@@ -186,8 +186,13 @@ def forecast_panel():
     else:
         st.success(alert["message"])
 
-    cols = st.columns(len(config.FORECAST_HORIZONS))
-    for col, h in zip(cols, config.FORECAST_HORIZONS):
+    cols = st.columns(len(config.FORECAST_HORIZONS) + 1)
+    cols[0].metric(
+        "🪴 Current soil moisture",
+        f"{latest_row[config.SOIL_COL]:.1f}",
+        latest_status,
+    )
+    for col, h in zip(cols[1:], config.FORECAST_HORIZONS):
         row = fc.loc[fc["hours_ahead"] == h].iloc[0]
         delta = row["forecast_soil_value"] - latest_row[config.SOIL_COL]
         col.metric(
@@ -198,7 +203,7 @@ def forecast_panel():
 
     fig_fc = go.Figure()
     fig_fc.add_trace(go.Scatter(
-        x=hourly.tail(24).index, y=hourly.tail(24)[config.SOIL_COL],
+        x=playhead_hourly.tail(24).index, y=playhead_hourly.tail(24)[config.SOIL_COL],
         name="Soil Moisture (recent history)", mode="lines+markers",
         line=dict(color="seagreen"),
     ))
@@ -213,7 +218,7 @@ def forecast_panel():
         height=380, xaxis_title="Time", yaxis_title="Soil Moisture (0-100)",
         legend=dict(orientation="h", y=1.1),
     )
-    st.plotly_chart(fig_fc, use_container_width=True)
+    st.plotly_chart(fig_fc, use_container_width=True, key=f"forecast_chart_{st.session_state.playhead}")
 
     with st.expander("Raw forecast table"):
         st.dataframe(fc)
